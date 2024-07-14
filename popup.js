@@ -10,33 +10,12 @@ document.addEventListener('DOMContentLoaded', () => {
   const playlistLinkInput = document.getElementById('playlist-link');
   const playlistNameInput = document.getElementById('playlist-name');
 
-
-  function switchTab(event) {
-    if (event.target.id === 'tab-add') {
-      tabAdd.classList.add('active');
-      tabHistory.classList.remove('active');
-      tabContentAdd.classList.add('tab-active');
-      tabContentHistory.classList.remove('tab-active');
-    } else {
-      tabAdd.classList.remove('active');
-      tabHistory.classList.add('active');
-      tabContentAdd.classList.remove('tab-active');
-      tabContentHistory.classList.add('tab-active');
-    }
-  }
-
   chrome.runtime.sendMessage({ type: 'getProgress' }, (response) => {
     if (response.length != 0) {
-      tabAdd.classList.remove('active');
-      tabHistory.classList.add('active');
       tabContentAdd.classList.remove('tab-active');
       tabContentHistory.classList.add('tab-active');
     }
   });
-
-  tabAdd.addEventListener('click', switchTab);
-  tabHistory.addEventListener('click', switchTab);
-
 
   function displayProgress() {
     progressList.innerHTML = '';
@@ -74,7 +53,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         console.log('Video ID:', videoId);
 
-        chrome.runtime.sendMessage({ type: 'addPlaylist', data: [{ videoId, playlistId, name }] }, (response) => {
+        chrome.runtime.sendMessage({ type: 'setProgress', data: [{ videoId, playlistId, name }] }, (response) => {
           console.log('Progress updated:', response.success);
         });
 
@@ -115,9 +94,7 @@ document.addEventListener('DOMContentLoaded', () => {
         progressList.innerHTML = '';
       }
     });
-
-    tabAdd.classList.add('active');
-    tabHistory.classList.remove('active');
+    
     tabContentAdd.classList.add('tab-active');
     tabContentHistory.classList.remove('tab-active');
   });
