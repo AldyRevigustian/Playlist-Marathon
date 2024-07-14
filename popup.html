@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>YouTube Playlist Tracker</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 10px; }
+    .tab { display: none; }
+    .tab-active { display: block; }
+    #tabs { display: flex; justify-content: space-around; cursor: pointer; }
+    #tabs div { padding: 10px; background-color: #eee; margin: 0 5px; }
+    #tabs .active { background-color: #ccc; }
+    #progress { list-style-type: none; padding: 0; }
+    #progress li { margin: 5px 0; display: flex; align-items: center; }
+    #progress img { width: 120px; height: 90px; margin-right: 10px; }
+    #progress a { text-decoration: none; color: black; }
+    #progress a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+  <div id="tabs">
+    <div id="tab-add" class="active">Add Playlist</div>
+    <div id="tab-history">History</div>
+  </div>
+  <div id="tab-content-add" class="tab tab-active">
+    <h1>Add Playlist</h1>
+    <input type="text" id="playlist-link" placeholder="Playlist Link/ID" />
+    <input type="text" id="playlist-name" placeholder="Playlist Name" />
+    <button id="add-playlist">Add Playlist</button>
+  </div>
+  <div id="tab-content-history" class="tab">
+    <h1>Your Playlists</h1>
+    <ul id="progress"></ul>
+  </div>
+  <button id="clear">Clear Progress</button>
+  <script src="popup.js"></script>
+</body>
+</html>
