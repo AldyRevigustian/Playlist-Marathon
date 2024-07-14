@@ -74,7 +74,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         console.log('Video ID:', videoId);
 
-        chrome.runtime.sendMessage({ type: 'addPlaylist', data: [{ videoId, playlistId, name }] }, (response) => {
+        chrome.runtime.sendMessage({ type: 'setProgress', data: [{ videoId, playlistId, name }] }, (response) => {
           console.log('Progress updated:', response.success);
         });
 
