@@ -24,7 +24,7 @@ document.addEventListener('DOMContentLoaded', () => {
       tabContentHistory.classList.add('tab-active');
     }
   }
-  
+
   chrome.runtime.sendMessage({ type: 'getProgress' }, (response) => {
     if (response.length != 0) {
       tabAdd.classList.remove('active');
@@ -45,7 +45,7 @@ document.addEventListener('DOMContentLoaded', () => {
       progress.forEach(item => {
         const li = document.createElement('li');
         const a = document.createElement('a');
-        a.href = `https://www.youtube.com/watch?v=${item.videoId}&list=${item.playlistId}&index=${item.index}`;
+        a.href = `https://www.youtube.com/watch?v=${item.videoId}&list=${item.playlistId}`;
         a.textContent = item.name;
         a.target = '_blank';
         const img = document.createElement('img');
@@ -74,7 +74,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         console.log('Video ID:', videoId);
 
-        chrome.runtime.sendMessage({ type: 'setProgress', data: [{ videoId, playlistId, index: 1, name }] }, (response) => {
+        chrome.runtime.sendMessage({ type: 'addPlaylist', data: [{ videoId, playlistId, name }] }, (response) => {
           console.log('Progress updated:', response.success);
         });
 
@@ -115,6 +115,11 @@ document.addEventListener('DOMContentLoaded', () => {
         progressList.innerHTML = '';
       }
     });
+
+    tabAdd.classList.add('active');
+    tabHistory.classList.remove('active');
+    tabContentAdd.classList.add('tab-active');
+    tabContentHistory.classList.remove('tab-active');
   });
 
   displayProgress();

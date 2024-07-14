@@ -16,7 +16,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   } else if (request.type === 'addPlaylist') {
     chrome.storage.local.get(['playlistProgress'], (result) => {
       let progress = result.playlistProgress || [];
-      progress.push({ playlistId: request.data.playlistId, name: request.data.name, videoId: request.data.videoId, index: 1 });
+      progress.push({ playlistId: request.data.playlistId, name: request.data.name, videoId: request.data.videoId });
       chrome.storage.local.set({ playlistProgress: progress }, () => {
         sendResponse({ success: true });
       });
