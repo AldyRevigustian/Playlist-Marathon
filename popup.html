@@ -26,11 +26,12 @@
       cursor: pointer;
       text-align: center;
       align-items: center;
-      position: absolute;
+      position: relative;
+      bottom: 30px;
       color: white;
       width: 266px;
       height: 30px;
-      opacity: 0.7;
+      opacity: 0.8;
       transition-duration: 0.5s;
     }
 
@@ -39,7 +40,6 @@
     }
 
     .overlay-bottom {
-      margin-top: 121px;
       background-color: black;
     }
 
@@ -56,13 +56,19 @@
       margin-left: 7px;
     }
 
-    a {
+    #playlist-url {
+      height: 150px;
       color: white;
       transition-duration: 0.5s;
+      text-decoration: none;
     }
 
-    a:hover {
+    #playlist-url:hover {
       color: white;
+    }
+
+    #thumbnail-img:hover+.overlay {
+      opacity: 1;
     }
 
     .greeting {
@@ -95,12 +101,13 @@
     </div>
     <hr id="first-hr">
     <div class="input-group mb-3 has-validation">
-      <span class="input-group-text bg-dark rounded-start-1" id="inputGroupPrepend"><svg xmlns="http://www.w3.org/2000/svg" width="16"
-          height="16" fill="white" class="bi bi-hash" viewBox="0 0 16 16">
+      <span class="input-group-text bg-dark rounded-start-1" id="inputGroupPrepend"><svg
+          xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" class="bi bi-hash" viewBox="0 0 16 16">
           <path
             d="M8.39 12.648a1 1 0 0 0-.015.18c0 .305.21.508.5.508.266 0 .492-.172.555-.477l.554-2.703h1.204c.421 0 .617-.234.617-.547 0-.312-.188-.53-.617-.53h-.985l.516-2.524h1.265c.43 0 .618-.227.618-.547 0-.313-.188-.524-.618-.524h-1.046l.476-2.304a1 1 0 0 0 .016-.164.51.51 0 0 0-.516-.516.54.54 0 0 0-.539.43l-.523 2.554H7.617l.477-2.304c.008-.04.015-.118.015-.164a.51.51 0 0 0-.523-.516.54.54 0 0 0-.531.43L6.53 5.484H5.414c-.43 0-.617.22-.617.532s.187.539.617.539h.906l-.515 2.523H4.609c-.421 0-.609.219-.609.531s.188.547.61.547h.976l-.516 2.492c-.008.04-.015.125-.015.18 0 .305.21.508.5.508.265 0 .492-.172.554-.477l.555-2.703h2.242zm-1-6.109h2.266l-.515 2.563H6.859l.532-2.563z" />
         </svg></span>
-      <input type="text" class="form-control shadow-0 rounded-end-1" id="playlist-name" placeholder="Playlist Name" required />
+      <input type="text" class="form-control shadow-0 rounded-end-1" id="playlist-name" placeholder="Playlist Name"
+        required />
       <div class="invalid-feedback" id="invalid-name">
         Please Enter a Name
       </div>
@@ -114,12 +121,17 @@
             d="M8.051 1.999h.089c.822.003 4.987.033 6.11.335a2.01 2.01 0 0 1 1.415 1.42c.101.38.172.883.22 1.402l.01.104.022.26.008.104c.065.914.073 1.77.074 1.957v.075c-.001.194-.01 1.108-.082 2.06l-.008.105-.009.104c-.05.572-.124 1.14-.235 1.558a2.01 2.01 0 0 1-1.415 1.42c-1.16.312-5.569.334-6.18.335h-.142c-.309 0-1.587-.006-2.927-.052l-.17-.006-.087-.004-.171-.007-.171-.007c-1.11-.049-2.167-.128-2.654-.26a2.01 2.01 0 0 1-1.415-1.419c-.111-.417-.185-.986-.235-1.558L.09 9.82l-.008-.104A31 31 0 0 1 0 7.68v-.123c.002-.215.01-.958.064-1.778l.007-.103.003-.052.008-.104.022-.26.01-.104c.048-.519.119-1.023.22-1.402a2.01 2.01 0 0 1 1.415-1.42c.487-.13 1.544-.21 2.654-.26l.17-.007.172-.006.086-.003.171-.007A100 100 0 0 1 7.858 2zM6.4 5.209v4.818l4.157-2.408z" />
         </svg>
       </span>
-      <input type="text" class="form-control shadow-0 rounded-end-1" id="playlist-link" placeholder="Playlist Link / ID" required>
+      <input type="text" class="form-control shadow-0 rounded-end-1" id="playlist-link" placeholder="Playlist Link / ID"
+        required>
       <div class="invalid-feedback" id="invalid-link">
         Please Enter Valid Playlist
       </div>
     </div>
-    <button class="btn btn-dark rounded-1" id="add-playlist">Add Playlist</button>
+    <button class="btn btn-dark rounded-1 fw-bold" id="add-playlist">Add<svg xmlns="http://www.w3.org/2000/svg"
+        width="20" height="20" fill="currentColor" class="bi bi-plus" viewBox="0 0 16 16" style="margin-bottom: 3px;">
+        <path
+          d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4" />
+      </svg></button>
   </div>
 
   <div id="tab-content-history" style="display: none;" class="card py-3 px-3 rounded-0">
@@ -137,14 +149,27 @@
 
     <div class="playlist" id="playlist-container">
       <div class="playlist-container">
-        <img id="thumbnail-img" src="" class="rounded-1">
-        <div class="overlay overlay-bottom rounded-bottom-1">
-          <a href="" target="_blank" id="playlist-url"><span id="playlist-title" class="overlay-item"></span></a></div>
+        <a href="" target="_blank" id="playlist-url">
+          <img id="thumbnail-img" src="" class="rounded-1">
+          <div class="overlay overlay-bottom rounded-bottom-1">
+            <span id="playlist-title" class="overlay-item"></span>
+          </div>
+        </a>
       </div>
     </div>
 
-    <button class="btn btn-dark mt-3 rounded-1" id="clear">Clear Progress</button>
+    <div class="progression my-2">
+      <div class="progress rounded-1">
+        <div class="progress-bar bg-dark" style="width: 25%;" id="playlist-bar">25%</div>
+      </div>
+      <small class="d-block text-center text-dark" style="font-size: 12px;" id="playlist-progress"></small>
+    </div>
 
+    <button class="btn btn-dark rounded-1 fw-bold" id="clear">Reset <svg width="20" height="20" fill="white"
+        class="bi bi-arrow-clockwise fw-bold" viewBox="0 0 16 16" style="margin-bottom: 2px;">
+        <path fill-rule="evenodd" d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2z" />
+        <path d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466" />
+      </svg></button>
   </div>
 
   </div>

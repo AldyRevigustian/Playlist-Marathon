@@ -9,9 +9,14 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     });
     return true;
   } else if (request.type === 'setProgress') {
-    chrome.storage.local.set({ playlistProgress: request.data }, () => {
-      sendResponse({ success: true });
-    });
+    (async () => {
+      let indexStr = await getIndex(`https://www.youtube.com/watch?v=${request.data[0].videoId}&list=${request.data[0].playlistId}`);
+      request.data[0].indexStr = indexStr;
+      
+      chrome.storage.local.set({ playlistProgress: request.data }, () => {
+        sendResponse({ success: true });
+      });
+    })();
     return true;
   } else if (request.type === 'addPlaylist') {
     chrome.storage.local.get(['playlistProgress'], (result) => {
@@ -22,5 +27,46 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       });
     });
     return true;
+  }else if (request.type === 'clearProgress'){
+    chrome.storage.local.set({ playlistProgress: [] }, () => {
+      sendResponse({ success: true });
+    });
   }
 });
+
+async function getIndex(url) {
+  console.log(url);
+
+  try {
+    const response = await fetch(url, {
+      headers: {
+        'Content-Type': 'text/html'
+      }
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const text = await response.text();
+
+    const pattern = /"currentIndex":\s*(\d+),\s*"playlistId":\s*"([^"]+)",\s*"totalVideos":\s*(\d+)/;
+    const match = text.match(pattern);
+
+    if (match) {
+      const currentIndex = parseInt(match[1]) + 1;
+      const totalVideos = match[3];
+
+      const result = `${currentIndex} / ${totalVideos}`;
+
+      console.log(result);
+      return result;
+    } else {
+      console.log('Pattern not found');
+      return "0 / 0 Video"
+    }
+  } catch (error) {
+    console.error('Error fetching playlist:', error);
+    return "0 / 0 Video"
+  }
+}

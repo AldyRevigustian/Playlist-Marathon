@@ -7,7 +7,11 @@ document.addEventListener('DOMContentLoaded', () => {
   const addButton = document.getElementById('add-playlist');
   const playlistLinkInput = document.getElementById('playlist-link');
   const playlistNameInput = document.getElementById('playlist-name');
-  const playlistContainer = document.getElementById('playlist-container');
+  const playlistProgress = document.getElementById('playlist-progress');
+  const playlistBar = document.getElementById('playlist-bar');
+  const imgThumbnail = document.getElementById("thumbnail-img");
+  const playListName = document.getElementById("playlist-title");
+  const playListUrl = document.getElementById("playlist-url");
 
   chrome.runtime.sendMessage({ type: 'getProgress' }, (response) => {
     if (response.length != 0) {
@@ -29,14 +33,17 @@ document.addEventListener('DOMContentLoaded', () => {
     chrome.runtime.sendMessage({ type: 'getProgress' }, (response) => {
       const progress = response || [];
       progress.forEach(item => {
-        const imgThumbnail = document.getElementById("thumbnail-img");
-        const playListName = document.getElementById("playlist-title");
-        const playListUrl = document.getElementById("playlist-url");
-
+        imgThumbnail.src = `https://img.youtube.com/vi/${item.videoId}/0.jpg`;
         playListUrl.href = `https://www.youtube.com/watch?v=${item.videoId}&list=${item.playlistId}`;
         playListName.textContent = item.name;
+        const indexParts = item.indexStr.replace(/\s+/g, '').split('/');
+        const percentage = (parseInt(indexParts[0]) / parseInt(indexParts[1])) * 100;
 
-        imgThumbnail.src = `https://img.youtube.com/vi/${item.videoId}/0.jpg`;
+        playlistProgress.textContent = `${item.indexStr} Videos`;
+
+        playlistBar.style.width = `${Math.round(percentage)}%`
+        playlistBar.textContent = `${Math.round(percentage)}%`
+
 
         // imgThumbnail.src = `https://img.youtube.com/vi/${item.videoId}/mqdefault.jpg`;
         // imgThumbnail.src = `https://img.youtube.com/vi/HJncmkjxOEs/maxresdefault.jpg`;
@@ -92,7 +99,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       });
     } else {
-      if (playlistName.length == 0) {
+      if (playlistName.length == 0 || playlistName.length > 30) {
         document.getElementById('invalid-name').style.display = "block";
         document.getElementById('invalid-link').style.display = "none";
       } else if (playlistLink.length == 0) {
@@ -106,11 +113,7 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   clearButton.addEventListener('click', () => {
-    chrome.runtime.sendMessage({ type: 'setProgress', data: [] }, (response) => {
-      if (response.success) {
-        // playlistContainer.style.display = "none";
-      }
-    });
+    chrome.runtime.sendMessage({ type: 'clearProgress' });
     tabContentAdd.style.display = "flex";
     tabContentHistory.style.display = "none";
   });
