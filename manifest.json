@@ -14,15 +14,15 @@
   "action": {
     "default_popup": "popup.html",
     "default_icon": {
-      "16": "youtube.png",
-      "48": "youtube.png",
-      "128": "youtube.png"
+      "16": "playlist-icon.png",
+      "48": "playlist-icon.png",
+      "128": "playlist-icon.png"
     }
   },
   "icons": {
-    "16": "youtube.png",
-    "48": "youtube.png",
-    "128": "youtube.png"
+    "16": "playlist-icon.png",
+    "48": "playlist-icon.png",
+    "128": "playlist-icon.png"
   },
   "content_scripts": [
     {

@@ -16,6 +16,14 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
+  const buttons = document.getElementsByClassName('redirectButton');
+  for (let button of buttons) {
+    button.addEventListener('click', function () {
+      const url = this.getAttribute('data-url');
+      chrome.tabs.create({ url: url });
+    });
+  }
+
   function displayProgress() {
     // playlistContainer.style.display = "none";
     chrome.runtime.sendMessage({ type: 'getProgress' }, (response) => {
@@ -27,7 +35,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         playListUrl.href = `https://www.youtube.com/watch?v=${item.videoId}&list=${item.playlistId}`;
         playListName.textContent = item.name;
-        
+
         imgThumbnail.src = `https://img.youtube.com/vi/${item.videoId}/0.jpg`;
 
         // imgThumbnail.src = `https://img.youtube.com/vi/${item.videoId}/mqdefault.jpg`;
