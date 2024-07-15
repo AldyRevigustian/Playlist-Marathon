@@ -20,8 +20,6 @@
         const existingEntry = progress.find(item => item.playlistId === playlistId);
         if (existingEntry) {
           existingEntry.videoId = videoId;
-        } else {
-          progress.push({ videoId, playlistId, name: '' });
         }
         chrome.runtime.sendMessage({ type: 'setProgress', data: progress }, (response) => {
           console.log('Progress updated:', response.success);
@@ -30,5 +28,6 @@
     }
   }
 
+  // setTimeout(trackVideo, 1000);
   setInterval(trackVideo, 1000);
 })();

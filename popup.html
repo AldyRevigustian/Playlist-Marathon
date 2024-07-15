@@ -1,33 +1,127 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html lang="en">
+
 <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>YouTube Playlist Tracker</title>
   <style>
-    body { font-family: Arial, sans-serif; padding: 10px; }
-    .tab { display: none; }
-    .tab-active { display: block; }
-    #tabs { display: flex; justify-content: space-around; cursor: pointer; }
-    #tabs div { padding: 10px; background-color: #eee; margin: 0 5px; }
-    #tabs .active { background-color: #ccc; }
-    #progress { list-style-type: none; padding: 0; }
-    #progress li { margin: 5px 0; display: flex; align-items: center; }
-    #progress img { width: 120px; height: 90px; margin-right: 10px; }
-    #progress a { text-decoration: none; color: black; }
-    #progress a:hover { text-decoration: underline; }
+    .form-control:focus {
+      border-color: black !important;
+      box-shadow: none !important;
+    }
+
+    .playlist img {
+      width: 266px;
+      height: 150px;
+      object-fit: cover;
+    }
+
+    .playlist-container {
+      display: flex;
+    }
+
+    .overlay {
+      display: flex;
+      cursor: pointer;
+      text-align: center;
+      align-items: center;
+      position: absolute;
+      color: white;
+      width: 266px;
+      height: 30px;
+      opacity: 0.7;
+      transition-duration: 0.5s;
+    }
+
+    .overlay:hover {
+      opacity: 1;
+    }
+
+    .overlay-bottom {
+      margin-top: 121px;
+      background-color: black;
+    }
+
+    .overlay-item {
+      display: inline-block !important;
+      text-align: center;
+      width: 266px !important;
+      color: white;
+    }
+
+
+    .overlay-item#playlist-title {
+      font-weight: bold;
+      margin-left: 7px;
+    }
+
+    a {
+      color: white;
+      transition-duration: 0.5s;
+    }
+
+    a:hover {
+      color: white;
+    }
   </style>
+  <link rel="stylesheet" href="/css/bootstrap.min.css">
 </head>
-<body>
-  <div id="tab-content-add" class="tab tab-active">
-    <h1>Add Playlist</h1>
-    <input type="text" id="playlist-link" placeholder="Playlist Link/ID" />
-    <input type="text" id="playlist-name" placeholder="Playlist Name" />
-    <button id="add-playlist">Add Playlist</button>
+
+<body style="width: 300px; ">
+  <div id="tab-content-add" class="card py-3 px-3 rounded-0">
+    <h3 class="text-center fw-bold">ADD PLAYLIST</h3>
+
+    <div class="input-group mt-2 mb-3 has-validation">
+      <span class="input-group-text bg-dark" id="inputGroupPrepend"><svg xmlns="http://www.w3.org/2000/svg" width="16"
+          height="16" fill="white" class="bi bi-hash" viewBox="0 0 16 16">
+          <path
+            d="M8.39 12.648a1 1 0 0 0-.015.18c0 .305.21.508.5.508.266 0 .492-.172.555-.477l.554-2.703h1.204c.421 0 .617-.234.617-.547 0-.312-.188-.53-.617-.53h-.985l.516-2.524h1.265c.43 0 .618-.227.618-.547 0-.313-.188-.524-.618-.524h-1.046l.476-2.304a1 1 0 0 0 .016-.164.51.51 0 0 0-.516-.516.54.54 0 0 0-.539.43l-.523 2.554H7.617l.477-2.304c.008-.04.015-.118.015-.164a.51.51 0 0 0-.523-.516.54.54 0 0 0-.531.43L6.53 5.484H5.414c-.43 0-.617.22-.617.532s.187.539.617.539h.906l-.515 2.523H4.609c-.421 0-.609.219-.609.531s.188.547.61.547h.976l-.516 2.492c-.008.04-.015.125-.015.18 0 .305.21.508.5.508.265 0 .492-.172.554-.477l.555-2.703h2.242zm-1-6.109h2.266l-.515 2.563H6.859l.532-2.563z" />
+        </svg></span>
+      <input type="text" class="form-control shadow-0" id="playlist-name" placeholder="Playlist Name" required />
+      <div class="invalid-feedback" id="invalid-name">
+        Please Enter a Name
+      </div>
+    </div>
+
+    <div class="input-group mb-3 has-validation">
+      <span class="input-group-text bg-dark"> <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+          fill="white" class="bi bi-music-note-list" viewBox="0 0 16 16">
+          <path d="M12 13c0 1.105-1.12 2-2.5 2S7 14.105 7 13s1.12-2 2.5-2 2.5.895 2.5 2"></path>
+          <path fill-rule="evenodd" d="M12 3v10h-1V3z"></path>
+          <path d="M11 2.82a1 1 0 0 1 .804-.98l3-.6A1 1 0 0 1 16 2.22V4l-5 1z"></path>
+          <path fill-rule="evenodd"
+            d="M0 11.5a.5.5 0 0 1 .5-.5H4a.5.5 0 0 1 0 1H.5a.5.5 0 0 1-.5-.5m0-4A.5.5 0 0 1 .5 7H8a.5.5 0 0 1 0 1H.5a.5.5 0 0 1-.5-.5m0-4A.5.5 0 0 1 .5 3H8a.5.5 0 0 1 0 1H.5a.5.5 0 0 1-.5-.5">
+          </path>
+        </svg></span>
+      <input type="text" class="form-control shadow-0" id="playlist-link" placeholder="Playlist Link / ID" required>
+      <div class="invalid-feedback" id="invalid-link">
+        Please Enter Valid Playlist
+      </div>
+    </div>
+    <button class="btn btn-dark" id="add-playlist">Add Playlist</button>
   </div>
-  <div id="tab-content-history" class="tab">
-    <h1>Your Playlists</h1>
-    <ul id="progress"></ul>
+
+  <div id="tab-content-history" style="display: none;" class="card py-3 px-3 rounded-0">
+    <h3 class="text-center fw-bold mb-3">SAVED PLAYLIST</h3>
+
+    <div class="playlist" id="playlist-container">
+      <div class="playlist-container">
+        <img id="thumbnail-img"
+          src="" class="rounded">
+        <div class="overlay overlay-bottom rounded-bottom">
+          <a href="" target="_blank" id="playlist-url"><span
+              id="playlist-title" class="overlay-item"></span></a></div>
+      </div>
+    </div>
+
+    <button class="btn btn-dark mt-4" id="clear">Clear Progress</button>
+
   </div>
-  <button id="clear">Clear Progress</button>
+
+  </div>
   <script src="popup.js"></script>
+  <script src="/js/bootstrap.min.js"></script>
 </body>
+
 </html>

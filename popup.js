@@ -1,7 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
 
-  const tabAdd = document.getElementById('tab-add');
-  const tabHistory = document.getElementById('tab-history');
   const tabContentAdd = document.getElementById('tab-content-add');
   const tabContentHistory = document.getElementById('tab-content-history');
   const progressList = document.getElementById('progress');
@@ -9,29 +7,31 @@ document.addEventListener('DOMContentLoaded', () => {
   const addButton = document.getElementById('add-playlist');
   const playlistLinkInput = document.getElementById('playlist-link');
   const playlistNameInput = document.getElementById('playlist-name');
+  const playlistContainer = document.getElementById('playlist-container');
 
   chrome.runtime.sendMessage({ type: 'getProgress' }, (response) => {
     if (response.length != 0) {
-      tabContentAdd.classList.remove('tab-active');
-      tabContentHistory.classList.add('tab-active');
+      tabContentAdd.style.display = "none";
+      tabContentHistory.style.display = "flex";
     }
   });
 
   function displayProgress() {
-    progressList.innerHTML = '';
+    // playlistContainer.style.display = "none";
     chrome.runtime.sendMessage({ type: 'getProgress' }, (response) => {
       const progress = response || [];
       progress.forEach(item => {
-        const li = document.createElement('li');
-        const a = document.createElement('a');
-        a.href = `https://www.youtube.com/watch?v=${item.videoId}&list=${item.playlistId}`;
-        a.textContent = item.name;
-        a.target = '_blank';
-        const img = document.createElement('img');
-        img.src = `https://img.youtube.com/vi/${item.videoId}/0.jpg`;
-        li.appendChild(img);
-        li.appendChild(a);
-        progressList.appendChild(li);
+        const imgThumbnail = document.getElementById("thumbnail-img");
+        const playListName = document.getElementById("playlist-title");
+        const playListUrl = document.getElementById("playlist-url");
+
+        playListUrl.href = `https://www.youtube.com/watch?v=${item.videoId}&list=${item.playlistId}`;
+        playListName.textContent = item.name;
+        
+        imgThumbnail.src = `https://img.youtube.com/vi/${item.videoId}/0.jpg`;
+
+        // imgThumbnail.src = `https://img.youtube.com/vi/${item.videoId}/mqdefault.jpg`;
+        // imgThumbnail.src = `https://img.youtube.com/vi/HJncmkjxOEs/maxresdefault.jpg`;
       });
     });
   }
@@ -84,19 +84,27 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       });
     } else {
-      alert('Invalid playlist link or ID');
+      if (playlistName.length == 0) {
+        document.getElementById('invalid-name').style.display = "block";
+        document.getElementById('invalid-link').style.display = "none";
+      } else if (playlistLink.length == 0) {
+        document.getElementById('invalid-link').style.display = "block";
+        document.getElementById('invalid-name').style.display = "none";
+      } else {
+        document.getElementById('invalid-name').style.display = "none";
+        document.getElementById('invalid-link').style.display = "block";
+      }
     }
   });
 
   clearButton.addEventListener('click', () => {
     chrome.runtime.sendMessage({ type: 'setProgress', data: [] }, (response) => {
       if (response.success) {
-        progressList.innerHTML = '';
+        // playlistContainer.style.display = "none";
       }
     });
-    
-    tabContentAdd.classList.add('tab-active');
-    tabContentHistory.classList.remove('tab-active');
+    tabContentAdd.style.display = "flex";
+    tabContentHistory.style.display = "none";
   });
 
   displayProgress();
