@@ -1,5 +1,4 @@
 document.addEventListener('DOMContentLoaded', () => {
-
   const tabContentAdd = document.getElementById('tab-content-add');
   const tabContentHistory = document.getElementById('tab-content-history');
   const progressList = document.getElementById('progress');
@@ -21,32 +20,29 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   const buttons = document.getElementsByClassName('redirectButton');
-  for (let button of buttons) {
+  Array.from(buttons).forEach(button => {
     button.addEventListener('click', function () {
       const url = this.getAttribute('data-url');
       chrome.tabs.create({ url: url });
     });
-  }
+  });
 
   function displayProgress() {
-    // playlistContainer.style.display = "none";
     chrome.runtime.sendMessage({ type: 'getProgress' }, (response) => {
       const progress = response || [];
       progress.forEach(item => {
         imgThumbnail.src = `https://img.youtube.com/vi/${item.videoId}/0.jpg`;
         playListUrl.href = `https://www.youtube.com/watch?v=${item.videoId}&list=${item.playlistId}`;
         playListName.textContent = item.name;
-        const indexParts = item.indexStr.replace(/\s+/g, '').split('/');
-        const percentage = (parseInt(indexParts[0]) / parseInt(indexParts[1])) * 100;
 
-        playlistProgress.textContent = `${item.indexStr} Videos`;
+        if (item.indexStr) {
+          const [current, total] = item.indexStr.replace(/\s+/g, '').split('/').map(Number);
+          const percentage = (current / total) * 100;
 
-        playlistBar.style.width = `${Math.round(percentage)}%`
-        playlistBar.textContent = `${Math.round(percentage)}%`
-
-
-        // imgThumbnail.src = `https://img.youtube.com/vi/${item.videoId}/mqdefault.jpg`;
-        // imgThumbnail.src = `https://img.youtube.com/vi/HJncmkjxOEs/maxresdefault.jpg`;
+          playlistProgress.textContent = `${item.indexStr} Videos`;
+          playlistBar.style.width = `${Math.round(percentage)}%`;
+          playlistBar.textContent = `${Math.round(percentage)}%`;
+        }
       });
     });
   }
@@ -57,14 +53,14 @@ document.addEventListener('DOMContentLoaded', () => {
       const text = await response.text();
       const parser = new DOMParser();
       const doc = parser.parseFromString(text, 'text/html');
-      let htmlContent = doc.documentElement.innerHTML;
+      const htmlContent = doc.documentElement.innerHTML;
 
-      let urlPattern = /"url":\s*"(\/watch\?v=([^&]+))/;
-      let match = htmlContent.match(urlPattern);
+      const urlPattern = /"url":\s*"(\/watch\?v=([^&]+))/;
+      const match = htmlContent.match(urlPattern);
 
       if (match) {
-        let fullUrl = match[1].split('\\u0026').join('&');
-        let videoId = fullUrl.split('=')[1].split('&')[0];
+        const fullUrl = match[1].split('\\u0026').join('&');
+        const videoId = fullUrl.split('=')[1].split('&')[0];
 
         console.log('Video ID:', videoId);
 
@@ -82,7 +78,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-
   addButton.addEventListener('click', () => {
     const playlistLink = playlistLinkInput.value;
     const playlistName = playlistNameInput.value;
@@ -95,19 +90,22 @@ document.addEventListener('DOMContentLoaded', () => {
           playlistLinkInput.value = '';
           playlistNameInput.value = '';
           displayProgress();
-          getFirstVideo(playlistId, playlistName)
+          getFirstVideo(playlistId, playlistName);
         }
       });
     } else {
+      const invalidName = document.getElementById('invalid-name');
+      const invalidLink = document.getElementById('invalid-link');
+
       if (playlistName.length == 0 || playlistName.length > 30) {
-        document.getElementById('invalid-name').style.display = "block";
-        document.getElementById('invalid-link').style.display = "none";
+        invalidName.style.display = "block";
+        invalidLink.style.display = "none";
       } else if (playlistLink.length == 0) {
-        document.getElementById('invalid-link').style.display = "block";
-        document.getElementById('invalid-name').style.display = "none";
+        invalidLink.style.display = "block";
+        invalidName.style.display = "none";
       } else {
-        document.getElementById('invalid-name').style.display = "none";
-        document.getElementById('invalid-link').style.display = "block";
+        invalidName.style.display = "none";
+        invalidLink.style.display = "block";
       }
     }
   });

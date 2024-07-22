@@ -19,6 +19,7 @@
       "128": "playlist-icon.png"
     }
   },
+  "host_permissions": ["<all_urls>"],
   "icons": {
     "16": "playlist-icon.png",
     "48": "playlist-icon.png",
